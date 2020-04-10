@@ -32,6 +32,7 @@ export default function () {
       <G6
         data={data}
         onNodeClick={(e: any) => nodeClickHandler(e.item._cfg.id)}
+        onPostionFixed={(nodes: any) => console.log(nodes)}
       />
     </div>
   )
