@@ -1,15 +1,53 @@
 import React, { useEffect, useState } from 'react'
 import ReactDOM from 'react-dom'
-// import { data } from './data';
 import G6 from '@antv/g6'
+import initialEdges from './edges.json'
+import initialNodes from './nodes.json'
 
-export default function (props: {
-  data: any
-  onNodeClick?: any
-  onPostionFixed?: any
-}) {
+let graph: any = null
+
+const nodes = initialNodes.map((node) => ({
+  id: node.custNo,
+  name: node.name,
+}))
+
+const edges = initialEdges.map((edge) => ({
+  source: edge.sourceNo,
+  target: edge.targetNo,
+}))
+
+export default function () {
   const ref = React.useRef(null)
-  let graph: any = null
+
+  const onNodeClick = (e: any) => {
+    const id = e.item._cfg.id
+    const model = graph.findById(id)
+
+    const { selected, name } = model._cfg.model
+
+    const rays = edges.filter((edge: any) => edge.target === id)
+
+    rays.forEach((ray: any) => {
+      const neighbor = graph.findById(ray.source)
+      graph.update(neighbor, {
+        ...neighbor,
+        style: {
+          fill: selected ? '#00FFFF' : '#FFFF00',
+        },
+        label: selected ? '' : neighbor._cfg.model.name,
+      })
+    })
+
+    graph.update(model, {
+      ...model,
+
+      style: {
+        fill: selected ? '#00FFFF' : '#FF0000',
+      },
+      selected: !selected,
+      label: selected ? '' : name,
+    })
+  }
 
   useEffect(() => {
     if (!graph) {
@@ -20,8 +58,16 @@ export default function (props: {
         modes: {
           default: ['drag-canvas', 'zoom-canvas'], // 允许拖拽画布、放缩画布、拖拽节点
         },
+        // layout: {
+        //   type: 'radial',
+        //   focusNode: '2500631037',
+        //   unitRadius: 60,
+        //   preventOverlap: true,
+        //   nodeSize: 15,
+        // },
         layout: {
-          type: 'random',
+          type: 'force',
+          preventOverlap: true,
         },
         defaultNode: {
           type: 'node',
@@ -33,26 +79,19 @@ export default function (props: {
           },
           size: 10,
           style: {
-            stroke: '#72CC4A',
+            fill: '#00FFFF',
+            stroke: '#002222',
           },
         },
-        // defaultEdge: {
-        //   type: 'polyline',
-        // },
       })
 
-      graph.on('node:click', (e: any) => {
-        props.onNodeClick && props.onNodeClick(e)
-      })
+      graph.on('node:click', onNodeClick)
 
-      graph.on('afterlayout', () => {
-        props.onPostionFixed && props.onPostionFixed(graph.getNodes())
-      })
+      graph.data({ nodes, edges })
     }
 
-    graph.data(props.data)
     graph.render()
-  }, [])
+  })
 
   return <div ref={ref} style={{ overflow: 'auto' }} />
 }
