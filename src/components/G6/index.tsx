@@ -6,10 +6,14 @@ import initialNodes from './nodes.json'
 
 let graph: any = null
 
-const nodes = initialNodes.map((node) => ({
-  id: node.custNo,
-  name: node.name,
-}))
+const nodes = initialNodes.map((node) =>
+  node.nodeStyle
+    ? node.nodeStyle
+    : {
+        id: node.custNo,
+        name: node.name,
+      }
+)
 
 const edges = initialEdges.map((edge) => ({
   source: edge.sourceNo,
@@ -68,6 +72,9 @@ export default function () {
         layout: {
           type: 'force',
           preventOverlap: true,
+          // nodeStrength: -0.1,
+          linkDistance: 80,
+          nodeSize: 20,
         },
         defaultNode: {
           type: 'node',
