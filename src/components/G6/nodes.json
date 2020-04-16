@@ -60,14 +60,6 @@
     "perCurrentCustomerRateCd": "",
     "setUpDdate": "20191001",
     "name": "上海鸿图建筑设计股份有限公司",
-    "nodeStyle": {
-      "id": "2500631037",
-      "type": "circle",
-      "style":{
-        "fill":"#FF2200"
-      },
-      "name":"上海鸿图建筑设计股份有限公司"
-    },
     "enterpriseTypeCD": "其他",
     "position": "",
     "batchNumDealWithTime": "20191217",
