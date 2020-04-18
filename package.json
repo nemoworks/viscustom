@@ -2,6 +2,7 @@
   "name": "g3-graph",
   "version": "0.1.0",
   "private": true,
+  "homepage": "/viscustom",
   "dependencies": {
     "@antv/g6": "^3.4.4",
     "@formily/antd": "^1.1.1",
